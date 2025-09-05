@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Croquis Visual Edificio - Grupo 2</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .building-container {
+            position: relative;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .floor {
+            background: white;
+            border: 3px solid #2c3e50;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            padding: 20px;
+            position: relative;
+            min-height: 200px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .floor-label {
+            position: absolute;
+            left: -120px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #3498db;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .sotano {
+            background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+            border-color: #546e7a;
+        }
+        
+        .sotano .floor-label {
+            background: #546e7a;
+        }
+        
+        /* Cuartos y áreas */
+        .room-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-start;
+        }
+        
+        .room {
+            background: #ecf0f1;
+            border: 2px solid #95a5a6;
+            border-radius: 8px;
+            padding: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .room-title {
+            background: #34495e;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px 5px 0 0;
+            margin: -10px -10px 10px -10px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Iconos de computadores */
+        .computer-grid {
+            display: grid;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .computer {
+            width: 25px;
+            height: 20px;
+            background: #3498db;
+            border: 2px solid #2980b9;
+            border-radius: 2px;
+            position: relative;
+            display: inline-block;
+            margin: 2px;
+        }
+        
+        .computer::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 15px;
+            height: 3px;
+            background: #2c3e50;
+            border-radius: 1px;
+        }
+        
+        .computer::before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            right: 3px;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 1px;
+        }
+        
+        /* Gabinete */
+        .cabinet {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            border: 3px solid #229954;
+            border-radius: 8px;
+            padding: 15px;
+            display: inline-block;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .cabinet-title {
+            color: white;
+            font-weight: bold;
+            font-size: 11px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .rack {
+            width: 60px;
+            height: 100px;
+            background: repeating-linear-gradient(
+                0deg,
+                #34495e,
+                #34495e 5px,
+                #2c3e50 5px,
+                #2c3e50 10px
+            );
+            border: 2px solid #1a1a1a;
+            border-radius: 3px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .rack-light {
+            position: absolute;
+            right: 5px;
+            width: 4px;
+            height: 4px;
+            background: #2ecc71;
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.3; }
+        }
+        
+        /* UPS */
+        .ups {
+            width: 60px;
+            height: 40px;
+            background: #34495e;
+            border: 2px solid #2c3e50;
+            border-radius: 5px;
+            margin: 10px auto;
+            position: relative;
+        }
+        
+        .ups::before {
+            content: 'UPS';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        /* Aire acondicionado */
+        .ac-unit {
+            width: 80px;
+            height: 30px;
+            background: linear-gradient(135deg, #3498db 0%, #5dade2 100%);
+            border: 2px solid #2980b9;
+            border-radius: 5px;
+            margin: 10px auto;
+            position: relative;
+        }
+        
+        .ac-unit::before {
+            content: '❄ -4°C';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        /* Access Point */
+        .ap {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #f39c12 0%, #e67e22 100%);
+            border: 3px solid #d68910;
+            border-radius: 50%;
+            position: relative;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+        
+        .ap::before {
+            content: '📶';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+            50% { box-shadow: 0 4px 20px rgba(243, 156, 18, 0.6); }
+            100% { box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        }
+        
+        /* Cables */
+        .vertical-cables {
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: -15px;
+            width: 40px;
+            z-index: 1;
+        }
+        
+        .cable-electrico-v {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            background: repeating-linear-gradient(
+                90deg,
+                #e74c3c,
+                #e74c3c 10px,
+                #c0392b 10px,
+                #c0392b 20px
+            );
+            border-radius: 3px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .cable-datos-v {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            background: repeating-linear-gradient(
+                90deg,
+                #3498db,
+                #3498db 10px,
+                #2980b9 10px,
+                #2980b9 20px
+            );
+            border-radius: 3px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .cable-horizontal {
+            height: 6px;
+            margin: 15px 0;
+            border-radius: 3px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .cable-electrico-h {
+            background: repeating-linear-gradient(
+                90deg,
+                #e74c3c,
+                #e74c3c 10px,
+                #c0392b 10px,
+                #c0392b 20px
+            );
+            margin-left: 30px;
+        }
+        
+        .cable-datos-h {
+            background: repeating-linear-gradient(
+                90deg,
+                #3498db,
+                #3498db 10px,
+                #2980b9 10px,
+                #2980b9 20px
+            );
+            margin-left: 50px;
+        }
+        
+        /* Distribución de pisos */
+        .floor-content {
+            margin-left: 80px;
+        }
+        
+        /* Switch secundario */
+        .switch {
+            width: 80px;
+            height: 25px;
+            background: #16a085;
+            border: 2px solid #138d75;
+            border-radius: 3px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .switch::before {
+            content: 'SWITCH';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .switch-ports {
+            position: absolute;
+            bottom: -8px;
+            left: 5px;
+            right: 5px;
+            display: flex;
+            justify-content: space-around;
+        }
+        
+        .port {
+            width: 4px;
+            height: 6px;
+            background: #f39c12;
+            border: 1px solid #d68910;
+        }
+        
+        /* Leyenda mejorada */
+        .legend {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .legend-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .legend-icon {
+            width: 40px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Grid de computadores para laboratorios */
+        .lab-computers {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 3px;
+        }
+        
+        .reception-computers {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+        }
+        
+        .support-computers {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px;
+        }
+        
+        .classroom-computers {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CROQUIS VISUAL - INFRAESTRUCTURA EDIFICIO GRUPO 2</h1>
+        <div class="subtitle">Distribución completa de equipos, cableado eléctrico y red de datos</div>
+        
+        <div class="building-container">
+            <!-- PISO 4 -->
+            <div class="floor">
+                <div class="floor-label">PISO 4</div>
+                <div class="vertical-cables">
+                    <div class="cable-electrico-v"></div>
+                    <div class="cable-datos-v"></div>
+                </div>
+                <div class="floor-content">
+                    <div class="cable-horizontal cable-electrico-h"></div>
+                    <div class="cable-horizontal cable-datos-h"></div>
+                    
+                    <div class="room-container">
+                        <div class="room">
+                            <div class="room-title">SALÓN 1</div>
+                            <div class="classroom-computers">
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="room">
+                            <div class="room-title">SALÓN 2</div>
+                            <div class="classroom-computers">
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="room">
+                            <div class="room-title">SALÓN 3</div>
+                            <div class="classroom-computers">
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PISO 3 -->
+            <div class="floor">
+                <div class="floor-label">PISO 3</div>
+                <div class="vertical-cables">
+                    <div class="cable-electrico-v"></div>
+                    <div class="cable-datos-v"></div>
+                </div>
+                <div class="floor-content">
+                    <div class="cable-horizontal cable-electrico-h"></div>
+                    <div class="cable-horizontal cable-datos-h"></div>
+                    
+                    <div class="room-container">
+                        <div class="room">
+                            <div class="room-title">SALÓN 1</div>
+                            <div class="classroom-computers">
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="room">
+                            <div class="room-title">SALÓN 2</div>
+                            <div class="classroom-computers">
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="room">
+                            <div class="room-title">SALÓN 3</div>
+                            <div class="classroom-computers">
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="ap"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PISO 2 -->
+            <div class="floor">
+                <div class="floor-label">PISO 2</div>
+                <div class="vertical-cables">
+                    <div class="cable-electrico-v"></div>
+                    <div class="cable-datos-v"></div>
+                </div>
+                <div class="floor-content">
+                    <div class="cable-horizontal cable-electrico-h"></div>
+                    <div class="cable-horizontal cable-datos-h"></div>
+                    
+                    <div class="room-container">
+                        <div class="cabinet" style="width: 120px;">
+                            <div class="cabinet-title">GABINETE SECUNDARIO</div>
+                            <div class="switch">
+                                <div class="switch-ports">
+                                    <div class="port"></div>
+                                    <div class="port"></div>
+                                    <div class="port"></div>
+                                    <div class="port"></div>
+                                    <div class="port"></div>
+                                    <div class="port"></div>
+                                    <div class="port"></div>
+                                    <div class="port"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="room">
+                            <div class="room-title">SALÓN 1</div>
+                            <div class="classroom-computers">
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="room">
+                            <div class="room-title">SALÓN 2</div>
+                            <div class="classroom-computers">
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="room">
+                            <div class="room-title">SALÓN 3</div>
+                            <div class="classroom-computers">
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PISO 1 -->
+            <div class="floor">
+                <div class="floor-label">PISO 1</div>
+                <div class="vertical-cables">
+                    <div class="cable-electrico-v"></div>
+                    <div class="cable-datos-v"></div>
+                </div>
+                <div class="floor-content">
+                    <div class="cable-horizontal cable-electrico-h"></div>
+                    <div class="cable-horizontal cable-datos-h"></div>
+                    
+                    <div class="room-container">
+                        <div class="cabinet" style="width: 120px;">
+                            <div class="cabinet-title">GABINETE SECUNDARIO</div>
+                            <div class="switch">
+                                <div class="switch-ports">
+                                    <div class="port"></div>
+                                    <div class="port"></div>
+                                    <div class="port"></div>
+                                    <div class="port"></div>
+                                    <div class="port"></div>
+                                    <div class="port"></div>
+                                    <div class="port"></div>
+                                    <div class="port"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="room">
+                            <div class="room-title">RECEPCIÓN</div>
+                            <div class="reception-computers">
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="room">
+                            <div class="room-title">SOPORTE TÉCNICO</div>
+                            <div class="support-computers">
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="room">
+                            <div class="room-title">LABORATORIO 1</div>
+                            <div class="lab-computers">
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="room">
+                            <div class="room-title">LABORATORIO 2</div>
+                            <div class="lab-computers">
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                                <div class="computer"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="ap"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SÓTANO -->
+            <div class="floor sotano">
+                <div class="floor-label" style="background: #546e7a;">SÓTANO</div>
+                <div class="vertical-cables">
+                    <div class="cable-electrico-v"></div>
+                    <div class="cable-datos-v"></div>
+                </div>
+                <div class="floor-content">
+                    <div class="cable-horizontal cable-electrico-h"></div>
+                    <div class="cable-horizontal cable-datos-h"></div>
+                    
+                    <div class="room-container">
+                        <div class="cabinet" style="width: 200px; height: auto;">
+                            <div class="cabinet-title">GABINETE PRINCIPAL (ESQUINA)</div>
+                            <div class="rack">
+                                <div class="rack-light" style="top: 10px;"></div>
+                                <div class="rack-light" style="top: 20px;"></div>
+                                <div class="rack-light" style="top: 30px;"></div>
+                                <div class="rack-light" style="top: 40px;"></div>
+                                <div class="rack-light" style="top: 50px;"></div>
+                                <div class="rack-light" style="top: 60px;"></div>
+                            </div>
+                            <div class="ups"></div>
+                            <div class="ac-unit"></div>
+                        </div>
+                        
+                        <div style="margin-left: 20px; padding: 15px; background: #ecf0f1; border-radius: 8px;">
+                            <h4 style="margin: 0 0 10px 0; color: #2c3e50;">Componentes del Gabinete Principal:</h4>
+                            <ul style="margin: 0; padding-left: 20px; font-size: 12px; color: #34495e;">
+                                <li>Rack principal con servidores</li>
+                                <li>Router principal / Firewall</li>
+                                <li>Switch core principal</li>
+                                <li>Banco de baterías (UPS)</li>
+                                <li>Sistema de refrigeración (-4°C)</li>
+                                <li>Panel de distribución eléctrica</li>
+                                <li>Sistema de monitoreo</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- LEYENDA VISUAL -->
+        <div class="legend">
+            <div class="legend-title">LEYENDA DE SÍMBOLOS</div>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="legend-icon">
+                        <div style="width: 100%; height: 6px; background: repeating-linear-gradient(90deg, #e74c3c, #e74c3c 5px, #c0392b 5px, #c0392b 10px); border-radius: 3px;"></div>
+                    </div>
+                    <span>Cable Eléctrico (Línea Roja)</span>
+                </div>
+                
+                <div class="legend-item">
+                    <div class="legend-icon">
+                        <div style="width: 100%; height: 6px; background: repeating-linear-gradient(90deg, #3498db, #3498db 5px, #2980b9 5px, #2980b9 10px); border-radius: 3px;"></div>
+                    </div>
+                    <span>Cable de Red/Datos (Línea Azul)</span>
+                </div>
+                
+                <div class="legend-item">
+                    <div class="legend-icon">
+                        <div class="computer"></div>
+                    </div>
+                    <span>Computador/Equipo</span>
+                </div>
+                
+                <div class="legend-item">
+                    <div class="legend-icon">
+                        <div class="ap" style="width: 35px; height: 35px; font-size: 16px;"></div>
+                    </div>
+                    <span>Access Point WiFi</span>
+                </div>
+                
+                <div class="legend-item">
+                    <div class="legend-icon">
+                        <div style="width: 40px; height: 25px; background: #27ae60; border: 2px solid #229954; border-radius: 3px;"></div>
+                    </div>
+                    <span>Gabinete/Rack</span>
+                </div>
+                
+                <div class="legend-item">
+                    <div class="legend-icon">
+                        <div class="switch" style="width: 40px; height: 15px; font-size: 8px;"></div>
+                    </div>
+                    <span>Switch de Red</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Resumen de distribución -->
+        <div style="margin-top: 30px; padding: 20px; background: #e8f8f5; border-left: 5px solid #16a085; border-radius: 5px;">
+            <h3 style="margin-top: 0; color: #16a085;">📊 RESUMEN DE DISTRIBUCIÓN - GRUPO 2</h3>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; font-size: 14px;">
+                <div>
+                    <strong>TOTAL DE EQUIPOS POR PISO:</strong>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li>Sótano: Gabinete Principal + Infraestructura</li>
+                        <li>Piso 1: 29 computadores + 1 AP + Gabinete Secundario</li>
+                        <li>Piso 2: 30 computadores + Gabinete Secundario</li>
+                        <li>Piso 3: 30 computadores + 1 AP</li>
+                        <li>Piso 4: 30 computadores (sin AP)</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong>CARACTERÍSTICAS ESPECIALES:</strong>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li>Cableado vertical desde sótano (esquina)</li>
+                        <li>Distribución horizontal en cada piso</li>
+                        <li>2 Access Points (Pisos 1 y 3)</li>
+                        <li>2 Gabinetes Secundarios (Pisos 1 y 2)</li>
+                        <li>Sistema de refrigeración a -4°C en sótano</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+Hecho por Tefy
